@@ -1,0 +1,5 @@
+Hello, welcome to Python!
+This is a file I/O example.
+Let's learn about reading and writing files.
+Python makes file handling easy and intuitive.
+Remember to always close your files properly.
