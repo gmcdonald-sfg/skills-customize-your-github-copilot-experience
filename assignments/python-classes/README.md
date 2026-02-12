@@ -18,6 +18,18 @@ Completed program should:
 - Include a method `display_info()` that prints the car's details
 - Create an instance of `Car` and call `display_info()`
 
+#### Example Input
+```python
+# Create a Car instance
+my_car = Car("Toyota", "Camry", 2020)
+my_car.display_info()
+```
+
+#### Example Output
+```
+2020 Toyota Camry
+```
+
 
 ### 🛠️ Add Methods and Interactions
 
@@ -31,3 +43,15 @@ Completed program should:
 - Add a method `update_mileage(new_mileage)` to update the mileage
 - Add a method `display_mileage()` to print the current mileage
 - Demonstrate updating and displaying mileage for a `Car` instance
+
+#### Example Input
+```python
+my_car = Car("Honda", "Civic", 2021)
+my_car.update_mileage(15000)
+my_car.display_mileage()
+```
+
+#### Example Output
+```
+Current mileage: 15000 miles
+```
