@@ -51,7 +51,7 @@ class AssignmentPortal {
     const { assignments } = this.config;
     const nextDueContainer = document.getElementById("next-due-assignment");
     
-    // Find the next assignment due (active assignments only)
+    // Find assignments due (active assignments only)
     const activeAssignments = assignments.filter(a => this.getAssignmentStatus(a) === 'active' && a.dueDate);
     if (activeAssignments.length === 0) {
       nextDueContainer.innerHTML = '<div class="loading">No upcoming assignments</div>';
@@ -59,27 +59,37 @@ class AssignmentPortal {
     }
 
     const currentDate = new Date();
-    const sortedAssignments = activeAssignments.sort((a, b) => {
+    currentDate.setHours(0, 0, 0, 0);
+    
+    // Filter assignments due within the next 7 days
+    const oneWeekFromNow = new Date();
+    oneWeekFromNow.setDate(currentDate.getDate() + 7);
+    oneWeekFromNow.setHours(0, 0, 0, 0);
+    
+    const upcomingAssignments = activeAssignments.filter(a => {
+      const dueDate = new Date(a.dueDate);
+      dueDate.setHours(0, 0, 0, 0);
+      return dueDate >= currentDate && dueDate <= oneWeekFromNow;
+    });
+    
+    // Sort by due date (earliest first)
+    const sortedAssignments = upcomingAssignments.sort((a, b) => {
       const dateA = new Date(a.dueDate);
       const dateB = new Date(b.dueDate);
       return dateA - dateB;
     });
 
-    // Find the next due assignment (either due today or in the future)
-    let nextAssignment = sortedAssignments.find(a => {
-      const dueDate = new Date(a.dueDate);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      dueDate.setHours(0, 0, 0, 0);
-      return dueDate >= today;
-    });
-
-    // If no future assignments, show the most recently due
-    if (!nextAssignment) {
-      nextAssignment = sortedAssignments[sortedAssignments.length - 1];
+    if (sortedAssignments.length === 0) {
+      nextDueContainer.innerHTML = '<div class="loading">No assignments due in the next week</div>';
+      return;
     }
 
-    nextDueContainer.innerHTML = this.createNextDueCard(nextAssignment);
+    // Render all assignments due within the next week
+    const cardsHTML = sortedAssignments.map(assignment => 
+      this.createNextDueCard(assignment)
+    ).join('');
+    
+    nextDueContainer.innerHTML = cardsHTML;
   }
 
   createNextDueCard(assignment) {
